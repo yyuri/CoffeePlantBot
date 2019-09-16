@@ -37,6 +37,7 @@ int   hoursDays = 24;               //Number of Hours per Day
 int   hoursLight = 14;              //Number of daily hours per Day
 int   hoursDark = 10;               //Number of nightly hours per Day
 int   min_moisture=42               //Desired min moisture target
+  
 unsigned long checktime30 = THIRTYMIN;
 unsigned long checktime10s = TENSEC;
 unsigned long checktime1m = ONEMIN;
