@@ -35,7 +35,7 @@ int moisture;                       //We store here the moisture values
 
 int   hoursLight = 14;              //Number of daily hours per Day
 int   hoursDark = 10;               //Number of nightly hours per Day
-int   min_moisture=42               //Desired min moisture target
+int   min_moisture=42;              //Desired min moisture target
   
 unsigned long checktime30 = THIRTYMIN;
 unsigned long checktime10s = TENSEC;
