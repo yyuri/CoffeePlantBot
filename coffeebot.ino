@@ -33,7 +33,6 @@ int moisture;                       //We store here the moisture values
 
 // GLOBAL VARIABLES  //
 
-int   hoursDays = 24;               //Number of Hours per Day
 int   hoursLight = 14;              //Number of daily hours per Day
 int   hoursDark = 10;               //Number of nightly hours per Day
 int   min_moisture=42               //Desired min moisture target
@@ -148,7 +147,7 @@ void loop() {
     }
     last_lights=(millis()-lights._previousMillis)/3600000;
     last_r1=(millis()-r1._previousMillis)/60000;    
-    if (lights.Period(10,14,2) == 1) {            //We check if it's time to switch light state
+    if (lights.Period(hoursDark,hoursLight,2) == 1) {            //We check if it's time to switch light state
       day = day + 1;
       EEPROM.put(eeAddress,day);
     }       
