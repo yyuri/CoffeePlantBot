@@ -1,16 +1,21 @@
 #include <Switcher.h>        //Switcher_lib library to operate relays with timers and periods.
 #include <Adafruit_SSD1306.h> //OLED SCREEN library
-#include <avr/wdt.h>          // We have a watchdog (wdt.h)
+#include <avr/wdt.h>          // We have a watchdog just in case (wdt.h)
 #include <EEPROM.h>
-Adafruit_SSD1306 display(4); //OLED DECLARATION
 
-
-#define ONESEC (1000UL * 1)
 #define TENSEC (1000UL * 10)
 #define ONEMIN (1000UL * 60 * 1)
-#define FIVEMIN (1000UL * 60 * 5)
 #define THIRTYMIN (1000UL * 60 * 30)
 
+
+Adafruit_SSD1306 display(4); //OLED DECLARATION
+
+                                    // SWITCH DECLARATIONS  //
+
+Switcher lights(lights_p,HIGH);
+Switcher r1(r1_p,HIGH);
+Switcher r2(r2_p,HIGH);
+Switcher soil(moisture_p,HIGH);
 
 // ANALOG INPUTS  //
 
@@ -26,13 +31,6 @@ int moisture_p = 8; // Hsensor relay
 // SENSORS VARIABLES  //
 
 int moisture;                       //We store here the moisture values
-
-// SWITCH DECLARATIONS  //
-
-Switcher lights(lights_p,HIGH);
-Switcher r1(r1_p,HIGH);
-Switcher r2(r2_p,HIGH);
-Switcher soil(moisture_p,HIGH);
 
 // GLOBAL VARIABLES  //
 
@@ -60,6 +58,7 @@ void setup() {
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
   intro();
+  
   pinMode(lights_p,OUTPUT);
   pinMode(r1_p,OUTPUT);
   pinMode(r2_p,OUTPUT);
@@ -95,17 +94,13 @@ void setup() {
   }
   delay(600);
   moisture = SoilSensor();          //Get first Read from Soil Moisture Sensor
-//  test_lights();
-//  test_r1();
-//  test_r2();
-//  firstscreen();
+  test_lights();
+  test_r1();
   lights.Start();
   delay(1000); 
-  wdt_enable(WDTO_8S);  // Watchdog setup (8 seconds )   
-  Serial.println(F("End of Setup"));               
-
+  wdt_enable(WDTO_8S);  // Watchdog setup set to 8 seconds
+  Serial.println(F("End of Setup"));
 }
-
 
 
 
@@ -120,7 +115,7 @@ void loop() {
       regar = 0;
       watering();                        
     }
-  switch (act%3) {                    //We show 3 diferent screem slide: intro, firstscreen and secondsreen. act variable take three values: 0, 1 or 2, each result will show each screen.
+  switch (act%3) {
     case 1:
       firstscreen();
       break;
@@ -362,9 +357,6 @@ display.setCursor(0,18);
 display.println("     ---START---");
 display.display();
 lights.Start();
-//r1.Start();
-//r2.Start();
-//soil.Start();
 delay(600);
 display.clearDisplay();
 display.setTextSize(1);             // Draw 2X-scale text
@@ -376,10 +368,7 @@ display.drawLine(0,8,display.width(),8, WHITE);
 display.setCursor(0,18);
 display.println("     ---STOP---");
 display.display();
-//lights.Stop();
-//r1.start();
-//r2.start();
-//soil.start();
+lights.Stop();
 delay(600);
 }
 
