@@ -1,7 +1,6 @@
 # The coffee plantbot - A coffee machine that grow strawberries
 
-
-Coffee Plantbot is a lil arduino program to turn a coffee machine into a device that care of plants
+This is a lil arduino program to turn a coffee machine into a device that takes care of plants
 
 ## Installation
 
