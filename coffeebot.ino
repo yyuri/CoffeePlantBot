@@ -24,9 +24,8 @@ int moisture_sensor = A2;
 // DIGITAL INPUTS  //
 
 int lights_p = 11;  // Lights relay
-int r1_p = 10;      // R1 relay
-int r2_p = 9;       // R2 relay
-int moisture_p = 8; // Hsensor relay
+int r1_p = 10;      // Water pump relay
+int moisture_p = 8; // Moisture sensor relay
 
 // SENSORS VARIABLES  //
 
@@ -61,11 +60,9 @@ void setup() {
   
   pinMode(lights_p,OUTPUT);
   pinMode(r1_p,OUTPUT);
-  pinMode(r2_p,OUTPUT);
   pinMode(moisture_p,OUTPUT);
   digitalWrite(lights_p,HIGH);
   digitalWrite(r1_p,HIGH);
-  digitalWrite(r2_p,HIGH);
   digitalWrite(moisture_p,HIGH);
 
   if ( EEPROM.read(eeAddress) == 255 ) {                              //In case EEPROM is never been initialized
@@ -373,7 +370,7 @@ delay(600);
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////TESTING R1/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////TESTING WATER PUMP/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void test_r1() {
@@ -402,36 +399,6 @@ r1.Stop();
 delay(800);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////TESTING R1/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void test_r2() {
-display.clearDisplay();
-display.setTextSize(1);             // Draw 2X-scale text
-display.setTextColor(WHITE);
-display.setCursor(0,0); 
-display.println("  The plantbot test");
-display.drawLine(0,8,display.width(),8, WHITE);
-display.setCursor(0,18);
-display.println("     ---START---");
-display.display();
-r2.Start();
-r1.Start();
-delay(600);
-display.clearDisplay();
-display.setTextSize(1);             // Draw 2X-scale text
-display.setTextColor(WHITE);
-display.setCursor(0,0); 
-display.println("  The plantbot test");
-display.drawLine(0,8,display.width(),8, WHITE);
-display.setCursor(0,18);
-display.println("     ---STOP---");
-display.display();
-r1.Stop();
-r2.Stop();
-delay(600);
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////TESTING SOILSENSOR/////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -458,17 +425,5 @@ display.setCursor(0,18);
 display.println("     ---STOP---");
 display.display();
 //soil.stop();
-delay(600);
-display.clearDisplay();
-display.setTextSize(1);             // Draw 2X-scale text
-display.setTextColor(WHITE);
-display.setCursor(0,0); 
-display.println("  The plantbot test");
-display.drawLine(0,8,display.width(),8, WHITE);
-display.setCursor(0,18);
-display.println("     ---PWM---");
-display.display();
-//r2.pwm(5,5);
-//r1.pwm(5,5);
 delay(600);
 }
