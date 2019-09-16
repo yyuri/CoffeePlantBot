@@ -49,4 +49,4 @@ Once all connected, during the setup the program will do some test as follow:
 - Get first sensor read
 
 If all of this goes well the program will start to work.
-
+This is an [example link](http://theplantbot.com "The coffee plantbot").
