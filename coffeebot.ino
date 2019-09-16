@@ -36,7 +36,7 @@ int moisture;                       //We store here the moisture values
 int   hoursDays = 24;               //Number of Hours per Day
 int   hoursLight = 14;              //Number of daily hours per Day
 int   hoursDark = 10;               //Number of nightly hours per Day
-  
+int   min_moisture=42               //Desired min moisture target
 unsigned long checktime30 = THIRTYMIN;
 unsigned long checktime10s = TENSEC;
 unsigned long checktime1m = ONEMIN;
@@ -131,7 +131,7 @@ void loop() {
                                                                                          // STUFF WE CHECK EVERY 1min //
   if((long)(millis() - checktime1m) >= 0) {
 
-    if (moisture <= 42) {
+    if (moisture <= min_moisture) {
       r1.Start();
       regar = 1;
       attempt = attempt + 1;
