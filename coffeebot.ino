@@ -10,12 +10,7 @@
 
 Adafruit_SSD1306 display(4); //OLED DECLARATION
 
-                                    // SWITCH DECLARATIONS  //
 
-Switcher lights(lights_p,HIGH);
-Switcher r1(r1_p,HIGH);
-Switcher r2(r2_p,HIGH);
-Switcher soil(moisture_p,HIGH);
 
 // ANALOG INPUTS  //
 
@@ -24,8 +19,17 @@ int moisture_sensor = A2;
 // DIGITAL INPUTS  //
 
 int lights_p = 11;  // Lights relay
-int r1_p = 10;      // Water pump relay
+int pump_p = 10;      // Water pump relay
 int moisture_p = 8; // Moisture sensor relay
+
+
+// SWITCH DECLARATIONS  //
+
+
+Switcher lights(lights_p,HIGH);
+Switcher pump(pump_p,HIGH);
+Switcher soil(moisture_p,HIGH);
+
 
 // SENSORS VARIABLES  //
 
@@ -42,7 +46,7 @@ unsigned long checktime10s = TENSEC;
 unsigned long checktime1m = ONEMIN;
 
 int last_lights=0;
-int last_r1=0;
+int last_pump=0;
 int act;
 bool regar;
 int day=2;
@@ -59,10 +63,10 @@ void setup() {
   intro();
   
   pinMode(lights_p,OUTPUT);
-  pinMode(r1_p,OUTPUT);
+  pinMode(pump_p,OUTPUT);
   pinMode(moisture_p,OUTPUT);
   digitalWrite(lights_p,HIGH);
-  digitalWrite(r1_p,HIGH);
+  digitalWrite(pump_p,HIGH);
   digitalWrite(moisture_p,HIGH);
 
   if ( EEPROM.read(eeAddress) == 255 ) {                              //In case EEPROM is never been initialized
@@ -92,7 +96,7 @@ void setup() {
   delay(600);
   moisture = SoilSensor();          //Get first Read from Soil Moisture Sensor
   test_lights();
-  test_r1();
+  test_pump();
   lights.Start();
   delay(1000); 
   wdt_enable(WDTO_8S);  // Watchdog setup set to 8 seconds
@@ -103,7 +107,7 @@ void setup() {
 
 void loop() {
   wdt_reset();                        //Watchdog reset on every loop
-  r1.Timer(1,0);                      //We check if water pump 1 was ON, if so, we turn it of after 1Second.
+  pump.Timer(1,0);                      //We check if water pump 1 was ON, if so, we turn it of after 1Second.
                                                                                         
                                                                                       // STUFF WE CHECK EVERY 10S //                                                                                  
   if((long)(millis() - checktime10s) >= 0) {
@@ -132,7 +136,7 @@ void loop() {
   if((long)(millis() - checktime1m) >= 0) {
 
     if (moisture <= min_moisture) {
-      r1.Start();
+      pump.Start();
       regar = 1;
       attempt = attempt + 1;
       if (attempt > 7) {
@@ -146,7 +150,7 @@ void loop() {
       attempt = 0;
     }
     last_lights=(millis()-lights._previousMillis)/3600000;
-    last_r1=(millis()-r1._previousMillis)/60000;    
+    last_pump=(millis()-pump._previousMillis)/60000;    
     if (lights.Period(hoursDark,hoursLight,2) == 1) {            //We check if it's time to switch light state
       day = day + 1;
       EEPROM.put(eeAddress,day);
@@ -218,13 +222,13 @@ display.setCursor(62,23);
 display.println("hace");
 display.setCursor(90,23);
 
-if (last_r1<59) {
-display.println(last_r1);
+if (last_pump<59) {
+display.println(last_pump);
 display.setCursor(102,23);
 display.println("min");
 }
 else {
-display.println((last_r1/60));
+display.println((last_pump/60));
 display.setCursor(102,23);
 display.println("h");
 }
@@ -373,7 +377,7 @@ delay(600);
 ///////////////////////////////////////////////////////////////////////////////////////////////TESTING WATER PUMP/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void test_r1() {
+void test_pump() {
 display.clearDisplay();
 display.setTextSize(1);             // Draw 2X-scale text
 display.setTextColor(WHITE);
@@ -383,7 +387,7 @@ display.drawLine(0,8,display.width(),8, WHITE);
 display.setCursor(0,18);
 display.println("     ---START---");
 display.display();
-r1.Start();
+pump.Start();
 delay(400);
 
 display.clearDisplay();
@@ -395,7 +399,7 @@ display.drawLine(0,8,display.width(),8, WHITE);
 display.setCursor(0,18);
 display.println("     ---STOP---");
 display.display();
-r1.Stop();
+pump.Stop();
 delay(800);
 }
 
